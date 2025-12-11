@@ -1,3 +1,3 @@
 ```html
-<link rel="stylesheet" href="https://raw.githubusercontent.com/MixelTe/runicsly/refs/heads/main/runicsly.css">
+<link rel="stylesheet" href="https://mixelte.github.io/runicsly/runicsly.css">
 ```
