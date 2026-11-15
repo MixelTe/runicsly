@@ -1,1 +1,15 @@
-@font-face{font-family: 'runicsly';src: url('https://mixelte.github.io/runicsly/runicsly.ttf');font-weight: normal;font-style: normal;font-display: swap;}
+@font-face {
+  font-family: 'Runicsly';
+  src: url('https://mixelte.github.io/runicsly/Runicsly.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Runicsly Mono';
+  src: url('https://mixelte.github.io/runicsly/RunicslyMono.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
