@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Наберите свой текст и попробуйте оригинальный и моноширинный шрифты Runicsly.">
+  <meta name="theme-color" content="#f8f5ef">
+  <title>Runicsly</title>
+  <link rel="stylesheet" href="./runicsly.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f8f5ef;
+      --surface: #fffcf7;
+      --ink: #252025;
+      --muted: #615660;
+      --line: #ddd4ce;
+      --accent: #603ba5;
+      --accent-wash: #ece3fa;
+      --specimen-size: 46px;
+      font-family: Inter, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; }
+    a { color: var(--accent); text-underline-offset: .22em; }
+    button, textarea, input { font: inherit; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .shell { width: min(calc(100% - 64px), 1120px); margin-inline: auto; }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-block: 23px;
+      border-bottom: 1px solid var(--line);
+    }
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 1rem;
+      font-weight: 760;
+      letter-spacing: -.025em;
+    }
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 29px;
+      height: 29px;
+      border-radius: 8px 8px 8px 2px;
+      font: 21px / 1 'Runicsly', sans-serif;
+      color: white;
+      background: var(--accent);
+    }
+    .repo { font-size: .875rem; font-weight: 650; text-decoration: none; }
+    .repo:hover { text-decoration: underline; }
+
+    .intro { padding-block: 42px 34px; }
+    h1 {
+      margin: 0;
+      max-width: 700px;
+      font-size: clamp(2.5rem, 5.6vw, 4.8rem);
+      font-weight: 770;
+      line-height: 1.01;
+      letter-spacing: -.074em;
+    }
+    .intro p {
+      margin: 15px 0 0;
+      max-width: 36rem;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+
+    .sandbox {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 19px;
+      background: var(--surface);
+      box-shadow: 0 12px 36px #3527170b;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px 24px;
+      padding: 18px 23px;
+      border-bottom: 1px solid var(--line);
+    }
+    .toolbar-label, .section-label {
+      color: var(--muted);
+      font-size: .81rem;
+      font-weight: 700;
+    }
+    .face {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      min-inline-size: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .options {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+    }
+    .options label { cursor: pointer; }
+    .options span {
+      display: block;
+      padding: 7px 11px;
+      border-radius: 7px;
+      font-size: .875rem;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+    .options input:checked + span { color: #492883; background: var(--accent-wash); }
+    .options input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .size {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: min(100%, 15rem);
+    }
+    .size input { flex: 1; min-width: 70px; accent-color: var(--accent); cursor: pointer; }
+    .size output {
+      min-width: 6ch;
+      font-size: .85rem;
+      font-weight: 650;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+    .panes { display: grid; grid-template-columns: minmax(245px, 1fr) minmax(0, 2fr); }
+    .editor, .view { min-width: 0; padding: 20px 23px 23px; }
+    .editor { display: flex; flex-direction: column; border-right: 1px solid var(--line); }
+    .view {
+      background-color: #faf6ee;
+      background-image: radial-gradient(circle, #b7a9a45e .65px, transparent .75px);
+      background-size: 17px 17px;
+    }
+    .section-label {
+      display: inline-block;
+      margin: 0 0 12px;
+      line-height: 1.4;
+    }
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 9.5rem;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      background: white;
+      font-size: 1rem;
+      line-height: 1.55;
+      resize: vertical;
+    }
+    textarea::placeholder { color: var(--muted); }
+    .samples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 13px; }
+    .samples button {
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      color: var(--muted);
+      background: var(--surface);
+      font-size: .77rem;
+      font-weight: 620;
+      cursor: pointer;
+    }
+    .samples button:hover { border-color: #a58acb; color: var(--accent); background: var(--accent-wash); }
+
+    .preview {
+      margin: 0;
+      min-height: 250px;
+      font: var(--specimen-size) / 1.4 'Runicsly', sans-serif;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      tab-size: 4;
+    }
+    .preview.is-mono { font-family: 'Runicsly Mono', monospace; }
+    .preview.is-empty { color: var(--muted); font: 1rem / 1.5 Inter, system-ui, sans-serif; }
+    .font-status { margin: 0 0 12px; color: var(--muted); font-size: .875rem; }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px 18px;
+      padding-block: 16px 24px;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+    .footer a:first-child { font-weight: 700; }
+
+    @media (max-width: 690px) {
+      .shell { width: calc(100% - 32px); }
+      .top { padding-block: 15px; }
+      .intro { padding-block: 26px 21px; }
+      .intro p { margin-top: 9px; font-size: .95rem; }
+      .toolbar { gap: 12px; padding: 13px 14px; }
+      .panes { grid-template-columns: minmax(0, 1fr); }
+      .editor, .view { padding: 14px; }
+      .editor { border-right: 0; border-bottom: 1px solid var(--line); }
+      textarea { min-height: 6rem; }
+      .preview { min-height: 170px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top shell">
+    <div class="wordmark"><span class="mark" aria-hidden="true">A</span> Runicsly</div>
+    <a class="repo" href="https://github.com/MixelTe/runicsly">GitHub <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main class="shell">
+    <div class="intro">
+      <div>
+        <h1>Runicsly</h1>
+        <p>Введите свой текст и попробуйте его в двух версиях шрифта.</p>
+      </div>
+    </div>
+
+    <section class="sandbox" aria-label="Настройка образца">
+      <div class="toolbar">
+        <fieldset class="face">
+          <legend class="sr-only">Шрифт</legend>
+          <span class="toolbar-label" aria-hidden="true">Шрифт</span>
+          <div class="options">
+            <label><input class="sr-only" type="radio" name="face" value="original" checked><span>Runicsly</span></label>
+            <label><input class="sr-only" type="radio" name="face" value="mono"><span>Runicsly Mono</span></label>
+          </div>
+        </fieldset>
+        <div class="size">
+          <label class="toolbar-label" for="size">Размер</label>
+          <input id="size" type="range" min="18" max="96" value="46">
+          <output id="size-value" for="size">46 px</output>
+        </div>
+      </div>
+
+      <div class="panes">
+        <div class="editor">
+          <label class="section-label" for="sample-text">Ваш текст</label>
+          <textarea id="sample-text" rows="4" spellcheck="false" placeholder="Введите текст">Съешь ещё этих мягких французских булок.
+Pack my box with five dozen liquor jugs.
+0123456789 / @ № % &amp;</textarea>
+          <div class="samples" role="group" aria-label="Примеры текста">
+            <button type="button" data-sample="all">Всё</button>
+            <button type="button" data-sample="cyrillic">Кириллица</button>
+            <button type="button" data-sample="latin">Латиница</button>
+            <button type="button" data-sample="signs">Цифры и знаки</button>
+          </div>
+        </div>
+        <div class="view">
+          <h2 class="section-label">Предпросмотр</h2>
+          <p id="font-status" class="font-status" role="status" hidden></p>
+          <noscript><p class="font-status">Включите JavaScript, чтобы изменить образец.</p></noscript>
+          <p id="preview" class="preview">Съешь ещё этих мягких французских булок.
+Pack my box with five dozen liquor jugs.
+0123456789 / @ № % &amp;</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <a id="download" href="./Runicsly.ttf" download>Скачать Runicsly TTF</a>
+      <a href="./LICENSE">SIL Open Font License 1.1</a>
+    </footer>
+  </main>
+
+  <script>
+    const editor = document.querySelector('#sample-text');
+    const preview = document.querySelector('#preview');
+    const size = document.querySelector('#size');
+    const sizeValue = document.querySelector('#size-value');
+    const download = document.querySelector('#download');
+    const fontStatus = document.querySelector('#font-status');
+    const face = document.querySelector('.face');
+
+    const samples = {
+      all: editor.defaultValue,
+      cyrillic: 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ\nСъешь ещё этих мягких французских булок.',
+      latin: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\nPack my box with five dozen liquor jugs.',
+      signs: '0123456789\n! ? @ № # $ % & * + - / =\n( ) [ ] { } < > : ; , .'
+    };
+
+    function updateText() {
+      const empty = editor.value.length === 0;
+      preview.classList.toggle('is-empty', empty);
+      preview.textContent = empty ? 'Здесь появится ваш текст.' : editor.value;
+    }
+
+    function updateSize() {
+      preview.style.setProperty('--specimen-size', size.value + 'px');
+      sizeValue.value = size.value + ' px';
+    }
+
+    function updateFont() {
+      const selected = face.querySelector(':checked').value;
+      const mono = selected === 'mono';
+      const family = mono ? 'Runicsly Mono' : 'Runicsly';
+      preview.classList.toggle('is-mono', mono);
+      download.href = mono ? './RunicslyMono.ttf' : './Runicsly.ttf';
+      download.textContent = 'Скачать ' + family + ' TTF';
+      fontStatus.hidden = true;
+
+      document.fonts.load('32px "' + family + '"').then(
+        (loaded) => showFontStatus(loaded.length > 0),
+        () => showFontStatus(false)
+      );
+
+      function showFontStatus(available) {
+        if (selected !== face.querySelector(':checked').value) return;
+        fontStatus.textContent = available ? '' : 'Не удалось загрузить шрифт ' + family + '.';
+        fontStatus.hidden = available;
+      }
+    }
+
+    editor.addEventListener('input', updateText);
+    size.addEventListener('input', updateSize);
+    face.addEventListener('change', updateFont);
+    document.querySelector('.samples').addEventListener('click', (event) => {
+      const sample = event.target.closest('button[data-sample]');
+      if (!sample) return;
+      editor.value = samples[sample.dataset.sample];
+      updateText();
+    });
+
+    updateText();
+    updateSize();
+    updateFont();
+  </script>
+</body>
+</html>
